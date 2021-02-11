@@ -20,9 +20,6 @@ app.use(compression());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Middleware for compression
-app.use(compression(options))
-
 // Require static files so CSS and JS work!
 app.use(express.static("public"));
 
@@ -33,15 +30,18 @@ mongoose.connect("mongodb://localhost/budget", {
   useFindAndModify: false
 });
 
-// An option to quit compression if the header comes back as x-no-comp
-// const options = {
-//   filter: (req, res) => {
-//       if (req.headers["x-no-comp"]) {
-//           return false;
-//       }
-//       return compression.filter(req, res);
-//   }
-// }
+// An option to quit compression if the header comes back as x - no - comp
+const options = {
+  filter: (req, res) => {
+    if (req.headers["x-no-comp"]) {
+      return false;
+    }
+    return compression.filter(req, res);
+  }
+}
+
+// Middleware for compression
+app.use(compression(options))
 
 // routes
 app.use(require("./routes/api.js"));
