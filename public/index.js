@@ -1,6 +1,44 @@
 let transactions = [];
 let myChart;
 
+
+const dbName = "budget"
+
+const request = indexedDB.open(dbName)
+
+request.onupgradeneeded = e => {
+  console.log(`indexedDB ${dbName} upgrade called`)
+  const db = e.target.result
+  const store = db.createObjectStore("budget", { keyPath: "name" })
+
+  // Use transaction oncomplete to make sure the objectStore creation is
+  // finished before adding data into it.
+  store.transaction.oncomplete = function (event) {
+    // Store values in the newly created objectStore.
+    let budgetStore = db.transaction("budget", "readwrite").objectStore("budget");
+    // customerData.forEach(function (customer) {
+    //   customerObjectStore.add(customer);
+    // });
+  };
+}
+
+request.onsuccess = e => {
+  const db = e.target.result
+  console.log(`indexedDB ${dbName} success called`)
+
+  // const store = db.createObjectStore()
+}
+
+
+
+
+
+
+request.onerror = e => {
+  console.log(`indexedDB ${dbName}  error called`)
+}
+
+
 fetch("/api/transaction")
   .then(response => {
     return response.json();
@@ -66,14 +104,14 @@ function populateChart() {
 
   myChart = new Chart(ctx, {
     type: 'line',
-      data: {
-        labels,
-        datasets: [{
-            label: "Total Over Time",
-            fill: true,
-            backgroundColor: "#6666ff",
-            data
-        }]
+    data: {
+      labels,
+      datasets: [{
+        label: "Total Over Time",
+        fill: true,
+        backgroundColor: "#6666ff",
+        data
+      }]
     }
   });
 }
@@ -111,7 +149,7 @@ function sendTransaction(isAdding) {
   populateChart();
   populateTable();
   populateTotal();
-  
+
   // also send to server
   fetch("/api/transaction", {
     method: "POST",
@@ -121,33 +159,86 @@ function sendTransaction(isAdding) {
       "Content-Type": "application/json"
     }
   })
-  .then(response => {    
-    return response.json();
-  })
-  .then(data => {
-    if (data.errors) {
-      errorEl.textContent = "Missing Information";
-    }
-    else {
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      if (data.errors) {
+        errorEl.textContent = "Missing Information";
+      }
+      else {
+        // clear form
+        nameEl.value = "";
+        amountEl.value = "";
+      }
+    })
+    .catch(err => {
+
+      // fetch failed, so save in indexed db
+      saveRecord(transaction)
+      // console.log(transaction)
+
+      function saveRecord(transaction) {
+        console.log(transaction)
+
+        // https://www.freecodecamp.org/news/a-quick-but-complete-guide-to-indexeddb-25f030425501/
+
+        // const dbName = "budget"
+
+        // const request = indexedDB.open(dbName)
+
+        // request.onupgradeneeded = e => {
+        //   console.log(`indexedDB ${dbName} upgrade called`)
+        //   const db = e.target.result
+        //   const store = db.createObjectStore("budget", { keyPath: "name" })
+
+        //   // Use transaction oncomplete to make sure the objectStore creation is
+        //   // finished before adding data into it.
+        //   objectStore.transaction.oncomplete = function (event) {
+        //     // Store values in the newly created objectStore.
+        //     var customerObjectStore = db.transaction("customers", "readwrite").objectStore("customers");
+        //     customerData.forEach(function (customer) {
+        //       customerObjectStore.add(customer);
+        //     });
+        //   };
+        // }
+
+        // request.onsuccess = e => {
+        //   const db = e.target.result
+        //   console.log(`indexedDB ${dbName} success called`)
+
+        //   const store = db.createObjectStore()
+        // }
+
+
+
+
+
+
+        // request.onerror = e => {
+        //   console.log(`indexedDB ${dbName}  error called`)
+        // }
+
+      }
+
+
+
+
+
+
+
+
+
       // clear form
       nameEl.value = "";
       amountEl.value = "";
-    }
-  })
-  .catch(err => {
-    // fetch failed, so save in indexed db
-    saveRecord(transaction);
-
-    // clear form
-    nameEl.value = "";
-    amountEl.value = "";
-  });
+    });
 }
 
-document.querySelector("#add-btn").onclick = function() {
+document.querySelector("#add-btn").onclick = function () {
   sendTransaction(true);
 };
 
-document.querySelector("#sub-btn").onclick = function() {
+document.querySelector("#sub-btn").onclick = function () {
   sendTransaction(false);
 };
