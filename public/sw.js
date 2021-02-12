@@ -13,18 +13,15 @@ const assets = [
 
 self.addEventListener("install", (evt) => {
     // when service worker has been installed
-
-    console.log("Service Worker Installed");
-
     const preCache = async () => {
         try {
             const cache = await caches.open(staticCache);
             cache.addAll(assets);
+            console.log("Service Worker Installed");
         } catch (err) {
-            console.log("problems happened installing Cache");
+            console.log("Problems installing Cache");
         }
     };
-
     evt.waitUntil(preCache());
 });
 
@@ -34,6 +31,7 @@ self.addEventListener("activate", (evt) => {
     const getKeys = async () => {
         try {
             const keys = await caches.keys();
+            console.log("Service Worker Activated")
             console.log(keys);
             return keys
                 .filter((key) => key !== staticCache)
