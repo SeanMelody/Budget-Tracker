@@ -1,6 +1,6 @@
 console.log("service worker connected")
 
-const staticCache = "site-static-v2";
+const staticCache = "site-static";
 
 const assets = [
     "/",
@@ -49,12 +49,13 @@ self.addEventListener("fetch", (evt) => {
 
     const cacheResponse = async () => {
         try {
-            const catchReponse = await caches.match(evt.request);
-            return catchReponse || fetch(evt.request);
+            const catchResponse = await caches.match(evt.request);
+            return catchResponse || fetch(evt.request);
         } catch (err) {
-            console.log(err);
+            console.log("fetch Request Error", err)
         }
-    };
 
-    evt.respondWith(cacheResponse());
-});
+    }
+
+    evt.respondWith(cacheResponse())
+})
