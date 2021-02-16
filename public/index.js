@@ -2,42 +2,6 @@ let transactions = [];
 let myChart;
 
 
-const dbName = "budget"
-
-const request = indexedDB.open(dbName)
-
-request.onupgradeneeded = e => {
-  console.log(`indexedDB ${dbName} upgrade called`)
-  const db = e.target.result
-  const store = db.createObjectStore("budget", { keyPath: "name" })
-
-  // Use transaction oncomplete to make sure the objectStore creation is
-  // finished before adding data into it.
-  store.transaction.oncomplete = function (event) {
-    // Store values in the newly created objectStore.
-    let budgetStore = db.transaction("budget", "readwrite").objectStore("budget");
-    // customerData.forEach(function (customer) {
-    //   customerObjectStore.add(customer);
-    // });
-  };
-}
-
-request.onsuccess = e => {
-  const db = e.target.result
-  console.log(`indexedDB ${dbName} success called`)
-
-  // const store = db.createObjectStore()
-}
-
-
-
-
-
-
-request.onerror = e => {
-  console.log(`indexedDB ${dbName}  error called`)
-}
-
 
 fetch("/api/transaction")
   .then(response => {
@@ -173,51 +137,64 @@ function sendTransaction(isAdding) {
       }
     })
     .catch(err => {
+      // save to indexedDB if budget db is offline 
 
       // fetch failed, so save in indexed db
       saveRecord(transaction)
       // console.log(transaction)
 
       function saveRecord(transaction) {
-        console.log(transaction)
+        // console.log(transaction)
 
         // https://www.freecodecamp.org/news/a-quick-but-complete-guide-to-indexeddb-25f030425501/
 
-        // const dbName = "budget"
+        const dbName = "budget"
 
-        // const request = indexedDB.open(dbName)
+        const openRequest = indexedDB.open(dbName)
 
-        // request.onupgradeneeded = e => {
-        //   console.log(`indexedDB ${dbName} upgrade called`)
-        //   const db = e.target.result
-        //   const store = db.createObjectStore("budget", { keyPath: "name" })
+        openRequest.onupgradeneeded = () => {
+          console.log(`indexedDB ${dbName} upgrade called`)
+          // const db = e.target.result
+          // const store = db.createObjectStore("budget", { keyPath: "id" })
+          openRequest.result.createObjectStore("offLineBudget", { keyPath: "id", autoIncrement: true })
+        }
 
-        //   // Use transaction oncomplete to make sure the objectStore creation is
-        //   // finished before adding data into it.
-        //   objectStore.transaction.oncomplete = function (event) {
-        //     // Store values in the newly created objectStore.
-        //     var customerObjectStore = db.transaction("customers", "readwrite").objectStore("customers");
-        //     customerData.forEach(function (customer) {
-        //       customerObjectStore.add(customer);
-        //     });
-        //   };
-        // }
+        openRequest.onsuccess = () => {
+          // const db = e.target.result
+          console.log(`indexedDB ${dbName} success called`)
 
-        // request.onsuccess = e => {
-        //   const db = e.target.result
-        //   console.log(`indexedDB ${dbName} success called`)
+          console.log(transaction)
 
-        //   const store = db.createObjectStore()
-        // }
+          let store = openRequest.result.transaction("offLineBudget", "readwrite").objectStore("offLineBudget");
+          store.add(transaction)
+          // let getRequest = store.get(transaction)
+          // getRequest.onsuccess = () => {
+          //   let result = getRequest.result
+          //   if (result) {
+          //     console.log(`found ${result}`)
+          //   } else {
+          //     console.log("not found")
+          //     store.add(id, transaction)
+          //   }
+          // }
+
+          // const offLine = db.store("transactions", "readwrite")
+          // const offLineTransaction = offLine.objectStore("transactions")
+          // offLineTransaction.add(transaction)
+
+          // colum = ID, colum  = transaction obj { key : value }
+
+
+        }
 
 
 
 
 
 
-        // request.onerror = e => {
-        //   console.log(`indexedDB ${dbName}  error called`)
-        // }
+        request.onerror = e => {
+          console.log(`indexedDB ${dbName}  error called`)
+        }
 
       }
 
