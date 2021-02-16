@@ -3,6 +3,28 @@ let myChart;
 
 
 
+const dbName = "budget"
+
+const openRequest = indexedDB.open(dbName)
+
+openRequest.onupgradeneeded = () => {
+  console.log(`indexedDB ${dbName} upgrade called`)
+  // const db = e.target.result
+  // const store = db.createObjectStore("budget", { keyPath: "id" })
+  openRequest.result.createObjectStore("offLineBudget", { keyPath: "id", autoIncrement: true })
+}
+
+openRequest.onsuccess = () => {
+  console.log(`indexedDB ${dbName} success called`)
+
+}
+
+
+openRequest.onerror = e => {
+  console.log(`indexedDB ${dbName}  error called`)
+}
+
+
 fetch("/api/transaction")
   .then(response => {
     return response.json();
@@ -144,57 +166,76 @@ function sendTransaction(isAdding) {
       // console.log(transaction)
 
       function saveRecord(transaction) {
-        // console.log(transaction)
+        console.log(transaction)
 
-        // https://www.freecodecamp.org/news/a-quick-but-complete-guide-to-indexeddb-25f030425501/
-
-        const dbName = "budget"
 
         const openRequest = indexedDB.open(dbName)
-
-        openRequest.onupgradeneeded = () => {
-          console.log(`indexedDB ${dbName} upgrade called`)
-          // const db = e.target.result
-          // const store = db.createObjectStore("budget", { keyPath: "id" })
-          openRequest.result.createObjectStore("offLineBudget", { keyPath: "id", autoIncrement: true })
-        }
-
+        // openRequest.onupgradeneeded = () => {
+        //   console.log(`indexedDB ${dbName} upgrade called`)
+        //   // const db = e.target.result
+        //   // const store = db.createObjectStore("budget", { keyPath: "id" })
+        //   openRequest.result.createObjectStore("offLineBudget", { keyPath: "id", autoIncrement: true })
+        // }
         openRequest.onsuccess = () => {
           // const db = e.target.result
-          console.log(`indexedDB ${dbName} success called`)
-
-          console.log(transaction)
+          console.log(`${transaction.name} added to indexedDB`)
+          // saveRecord()
+          // console.log(transaction)
 
           let store = openRequest.result.transaction("offLineBudget", "readwrite").objectStore("offLineBudget");
           store.add(transaction)
-          // let getRequest = store.get(transaction)
-          // getRequest.onsuccess = () => {
-          //   let result = getRequest.result
-          //   if (result) {
-          //     console.log(`found ${result}`)
-          //   } else {
-          //     console.log("not found")
-          //     store.add(id, transaction)
-          //   }
-          // }
-
-          // const offLine = db.store("transactions", "readwrite")
-          // const offLineTransaction = offLine.objectStore("transactions")
-          // offLineTransaction.add(transaction)
-
-          // colum = ID, colum  = transaction obj { key : value }
-
 
         }
 
+        // https://www.freecodecamp.org/news/a-quick-but-complete-guide-to-indexeddb-25f030425501/
+
+        // const dbName = "budget"
+
+        // const openRequest = indexedDB.open(dbName)
+
+        // openRequest.onupgradeneeded = () => {
+        //   console.log(`indexedDB ${dbName} upgrade called`)
+        //   // const db = e.target.result
+        //   // const store = db.createObjectStore("budget", { keyPath: "id" })
+        //   openRequest.result.createObjectStore("offLineBudget", { keyPath: "id", autoIncrement: true })
+        // }
+
+        // openRequest.onsuccess = () => {
+        //   // const db = e.target.result
+        //   console.log(`indexedDB ${dbName} success called`)
+
+        //   console.log(transaction)
+
+        //   let store = openRequest.result.transaction("offLineBudget", "readwrite").objectStore("offLineBudget");
+        //   store.add(transaction)
+        //   // let getRequest = store.get(transaction)
+        //   // getRequest.onsuccess = () => {
+        //   //   let result = getRequest.result
+        //   //   if (result) {
+        //   //     console.log(`found ${result}`)
+        //   //   } else {
+        //   //     console.log("not found")
+        //   //     store.add(id, transaction)
+        //   //   }
+        //   // }
+
+        //   // const offLine = db.store("transactions", "readwrite")
+        //   // const offLineTransaction = offLine.objectStore("transactions")
+        //   // offLineTransaction.add(transaction)
+
+        //   // colum = ID, colum  = transaction obj { key : value }
+
+
+        // }
 
 
 
 
 
-        request.onerror = e => {
-          console.log(`indexedDB ${dbName}  error called`)
-        }
+
+        // request.onerror = e => {
+        //   console.log(`indexedDB ${dbName}  error called`)
+        // }
 
       }
 
@@ -219,3 +260,17 @@ document.querySelector("#add-btn").onclick = function () {
 document.querySelector("#sub-btn").onclick = function () {
   sendTransaction(false);
 };
+
+// function that runs on page reload (invoked)
+// check the indexded db if there is data. 
+// loop the array of key value pairs
+
+// https://medium.com/@seandmelody/fun-with-linear-radial-gradients-bfcc47cade71
+
+
+function getIndexedDB() {
+  let offLine = openRequest.result.transaction("offLineBudget").objectStore("offLineBudget").get("1").onsuccess = function (event) {
+    console.log("Name for SSN 444-44-4444 is " + event.target.result.name);
+  };
+}
+getIndexedDB()
