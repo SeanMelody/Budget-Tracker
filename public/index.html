@@ -14,11 +14,13 @@
 </head>
 
 <body>
+  <!-- Titlle of page -->
   <div class="wrapper">
     <div class="total">
       <div class="total">Your total is: $<span id="total">0</span></div>
     </div>
 
+    <!-- Section to add to the mongoose database, add or subract -->
     <div class="form">
       <input type="text" id="t-name" placeholder="Name of transaction" />
       <input type="number" min="0" id="t-amount" placeholder="Transaction amount" />
@@ -27,6 +29,7 @@
       <p class="error"></p>
     </div>
 
+    <!-- table displayed here -->
     <div class="transactions">
       <table>
         <thead>
@@ -39,12 +42,15 @@
       </table>
     </div>
 
+    <!-- Graph displayed here via canvas -->
     <canvas id="myChart"></canvas>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <!-- Javascript files -->
   <script src="index.js"></script>
   <script src="db.js"></script>
+  <!-- Javascript for my service workers -->
   <script>
     (async () => {
       if ("serviceWorker" in navigator) {
@@ -57,24 +63,6 @@
       }
     })();
   </script>
-  <!-- <script>
-    const request = indexedDB.open("budget")
-
-    request.onupgradeneeded = e => {
-      console.log("indexedDB upgrade called")
-    }
-
-    request.onsuccess = e => {
-
-      console.log("indexedDB  success called")
-    }
-
-    request.onerror = e => {
-      console.log("indexedDB  error called")
-    }
-
-
-  </script> -->
 </body>
 
 </html>

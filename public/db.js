@@ -74,5 +74,6 @@ function checkDatabase() {
     };
 }
 
+
 // Event listener to check to see if the database is online
 window.addEventListener("online", checkDatabase);

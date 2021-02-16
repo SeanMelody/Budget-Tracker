@@ -1,8 +1,8 @@
-console.log("service worker connected")
-
+// Const for static cache and data cache
 const staticCache = "site-static";
 const dataCache = "data-cache";
 
+// Set the assets to be saved
 const assets = [
     "/",
     "/index.html",
@@ -14,40 +14,7 @@ const assets = [
     "./manifest.json"
 ];
 
-// self.addEventListener("install", (evt) => {
-//     // when service worker has been installed
-//     const preCache = async () => {
-//         try {
-//             const cache = await caches.open(staticCache);
-//             cache.addAll(assets);
-//             console.log("Service Worker Installed");
-//         } catch (err) {
-//             console.log("Problems installing Cache");
-//         }
-//     };
-//     evt.waitUntil(preCache());
-// });
-
-// self.addEventListener("activate", (evt) => {
-//     // grab keys from caches
-
-//     const getKeys = async () => {
-//         try {
-//             const keys = await caches.keys();
-//             console.log("Service Worker Activated")
-//             console.log(keys);
-//             return keys
-//                 .filter((key) => key !== staticCache && key !== dataCache)
-//                 .map((key) => caches.delete(key));
-//         } catch (err) {
-//             console.log(err);
-//         }
-//     };
-
-//     evt.waitUntil(getKeys());
-// });
-
-// install
+// install the service worker
 self.addEventListener("install", function (evt) {
     evt.waitUntil(
         caches.open(staticCache).then(cache => {
@@ -55,10 +22,10 @@ self.addEventListener("install", function (evt) {
             return cache.addAll(assets);
         })
     );
-
     self.skipWaiting();
 });
 
+// add the service worker
 self.addEventListener("activate", function (evt) {
     evt.waitUntil(
         caches.keys().then(keyList => {
@@ -72,12 +39,11 @@ self.addEventListener("activate", function (evt) {
             );
         })
     );
-
     self.clients.claim();
 });
 
 
-// fetch
+// event listener for the fetch request
 self.addEventListener("fetch", function (evt) {
     // cache successful requests to the API
     if (evt.request.url.includes("/api/")) {
@@ -98,31 +64,13 @@ self.addEventListener("fetch", function (evt) {
                     });
             }).catch(err => console.log(err))
         );
-
         return;
     }
 
     // if the request is not for the API, serve static assets using "offline-first" approach.
-    // see https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook#cache-falling-back-to-network
     evt.respondWith(
         caches.match(evt.request).then(function (response) {
             return response || fetch(evt.request);
         })
     );
 });
-
-// self.addEventListener("fetch", (evt) => {
-//     console.log("there was a fetch: ", evt);
-
-//     const cacheResponse = async () => {
-//         try {
-//             const catchResponse = await caches.match(evt.request);
-//             return catchResponse || fetch(evt.request);
-//         } catch (err) {
-//             console.log("fetch Request Error", err)
-//         }
-
-//     }
-
-//     evt.respondWith(cacheResponse())
-// })

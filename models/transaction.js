@@ -1,7 +1,10 @@
+// Require Mongoose
 const mongoose = require("mongoose");
 
+// Set the schema
 const Schema = mongoose.Schema;
 
+// Set the transactions columns
 const transactionSchema = new Schema(
   {
     name: {
@@ -20,6 +23,8 @@ const transactionSchema = new Schema(
   }
 );
 
+// Mongoose schema to transactions
 const Transaction = mongoose.model("Transaction", transactionSchema);
 
+// Gotta module.exports!
 module.exports = Transaction;
