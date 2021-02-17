@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // Connect to mongoose and optimize for Heroku Deployment
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workoutDB", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/budget", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
