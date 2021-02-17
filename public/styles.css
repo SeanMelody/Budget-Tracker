@@ -1,6 +1,8 @@
 body {
   font-size: 120%;
   font-family: Arial;
+  height: 100%;
+  background-image: linear-gradient(rgb(255, 255, 255), rgb(227, 227, 227));
 }
 
 button, input {
