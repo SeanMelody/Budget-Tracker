@@ -1,47 +1,34 @@
 # Online/Offline Budget Tracker 
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<img src="https://img.shields.io/badge/LICENSE-mit-green"/>
 
 ## Description
 
-    A budget tracker that will let you keep track of your spending, even when offline
-
-
-## Table of Contents
-
-  [Description](##Description)
-
-  [Installation](##Installation)
-
-  [Usage](##Usage)
-
-  [License](##License)
-
-  [Contributing](##Contributing)
-
-  [Tests](##Tests)
+    A budget tracker that will let you keep track of your spending, even when offline by saving data to IndexedDB
 
 
 ## Installation
 
     Simply use the deployed application, or fork the repo and run node server.js
 
-## Usage
-
-    Use this project to keep track your spending, even when in a location without internet
 
 ## License
 
     This application is covered under the MIT License
 
+
 ## Contributing
 
-    
+    If you would like to contribute, simply fork and gitpull!
 
 ## Tests
 
-    
+    If trying to determine offline functionality, using the network tab in Google Chrome's Developer Tools, simply set the page to offline!
 
+
+Gif Walk Through:
+
+Screenshot Walk Though:
 
 ## Questions?
 
