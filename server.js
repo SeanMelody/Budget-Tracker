@@ -22,7 +22,8 @@ app.use(express.json());
 // Require static files so CSS and JS work!
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/budget", {
+// Connect to mongoose and optimize for Heroku Deployment
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workoutDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
