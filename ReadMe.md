@@ -4,7 +4,7 @@
 
 ## Description
 
-    A budget tracker that will let you keep track of your spending, even when offline by saving data to IndexedDB
+   A budget tracker that will let you keep track of your spending, even when offline by utilizing service-workers and saving data to IndexedDB, then when back online, sending the data to the MongoDB Database.
 
 
 ## Installation
