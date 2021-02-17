@@ -1,8 +1,8 @@
 body {
   font-size: 120%;
   font-family: Arial;
-  height: 100%;
-  background-image: linear-gradient(rgb(255, 255, 255), rgb(227, 227, 227));
+  height: 1000px;
+  background: linear-gradient(200deg, white 40%, red 43%, orange 46%, yellow 49%, blue 52%, purple 55%, white 58%);
 }
 
 button, input {
@@ -50,4 +50,18 @@ tr:nth-child(even) {
   overflow: auto;
   width: 90%;
   margin: 0 auto;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  margin: 0;
+  width: 100%;
+  height: 60px;
+  font-size: 18px;
+  margin-top: 20px;
+  padding-top: 20px;
+  text-align: center;
+  background-color: rgba(198, 198, 198, 0.5);
+  color: rgba(0, 0, 0, 0.5) 
 }
